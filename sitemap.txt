@@ -1,4 +1,9 @@
 https://zhanyanmei.github.io/4a17b156
 https://zhanyanmei.github.io/about/
+https://zhanyanmei.github.io/categories/
 https://zhanyanmei.github.io/projects/
+https://zhanyanmei.github.io/tags/
 https://zhanyanmei.github.io/
+https://zhanyanmei.github.io/tags/Hexo/
+https://zhanyanmei.github.io/tags/%E5%8D%9A%E5%AE%A2/
+https://zhanyanmei.github.io/categories/essay/

@@ -17,5 +17,12 @@ Deploy to remote sites$ hexo deploy
 
 More info: Deployment
 ]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>博客</tag>
+      </tags>
   </entry>
 </search>

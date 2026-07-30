@@ -20,7 +20,25 @@
   </url>
   
   <url>
+    <loc>https://zhanyanmei.github.io/categories/</loc>
+    
+    <lastmod>2026-07-30</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
     <loc>https://zhanyanmei.github.io/projects/</loc>
+    
+    <lastmod>2026-07-30</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://zhanyanmei.github.io/tags/</loc>
     
     <lastmod>2026-07-30</lastmod>
     
@@ -37,6 +55,27 @@
   </url>
 
   
+  <url>
+    <loc>https://zhanyanmei.github.io/tags/Hexo/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://zhanyanmei.github.io/tags/%E5%8D%9A%E5%AE%A2/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
 
+  
+  <url>
+    <loc>https://zhanyanmei.github.io/categories/essay/</loc>
+    <lastmod>2026-07-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
   
 </urlset>
