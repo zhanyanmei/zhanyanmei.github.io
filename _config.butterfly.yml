@@ -1,0 +1,141 @@
+# Butterfly 主题配置
+# 完整文档: https://butterfly.js.org/
+
+# ----- 导航菜单 -----
+menu:
+  首页: / || fas fa-home
+  归档: /archives/ || fas fa-archive
+  分类: /categories/ || fas fa-folder-open
+  标签: /tags/ || fas fa-tags
+  关于: /about/ || fas fa-user
+
+# ----- 社交链接 -----
+social:
+  fas fa-envelope: mailto:732454894@qq.com || 邮箱
+  fab fa-github: https://github.com/zhanyanmei || GitHub
+
+# ----- 个人信息卡片 -----
+avatar:
+  img: /images/avatar.png
+
+# ----- 文章列表设置 -----
+index_post_list:
+  direction: column      # column | row
+  content_length: 200    # 文章摘要字数
+
+# ----- 本地搜索 -----
+local_search:
+  enable: true
+  preload: true
+  top_n_per_article: 1
+
+# ----- 字数统计 -----
+wordcount:
+  enable: true
+  post_wordcount: true
+  min2read: true
+  total_wordcount: true
+
+# ----- 代码高亮 -----
+code_word_wrap: true
+highlight_theme: darker    # default | darker | light | ocean | mac
+
+# ----- 右下角按钮 -----
+rightside:
+  enable: true
+  hide:
+    readmode: false
+    translate: true
+    darkmode: false
+    hideAside: true
+    toc: true
+    chat: false
+    comment: false
+
+# ----- 页脚 -----
+footer:
+  owner:
+    enable: true
+    since: 2026
+  copyright: true
+  powered: true
+
+# ----- 文章元信息 -----
+post_meta:
+  page:
+    date_type: created
+    categories: true
+    tags: true
+    wordcount: true
+  post:
+    date_type: both    # created | updated | both
+    categories: true
+    tags: true
+    wordcount: true
+
+# ----- 文章版权 -----
+post_copyright:
+  enable: true
+  decode: false
+  author_href: https://github.com/zhanyanmei
+  license: CC BY 4.0
+  license_url: https://creativecommons.org/licenses/by/4.0/
+
+# ----- 侧边栏 -----
+aside:
+  enable: true
+  hide: false
+  button: true
+  mobile: true
+  position: right
+  display:
+    archive: true
+    tag: true
+    category: true
+  card_author:
+    enable: true
+    description: 记录学习，分享技术
+    button:
+      enable: true
+      icon: fab fa-github
+      text: GitHub
+      link: https://github.com/zhanyanmei
+  card_announcement:
+    enable: true
+    content: 欢迎来到我的博客 👋<br>记录学习过程中的笔记与心得。
+  card_recent_post:
+    enable: true
+    limit: 5
+    sort: date
+  card_categories:
+    enable: true
+    limit: 8
+    expand: none
+  card_tags:
+    enable: true
+    limit: 20
+  card_webinfo:
+    enable: true
+    post_count: true
+    last_push_date: true
+
+# ----- 赞赏 -----
+reward:
+  enable: false
+
+# ----- 相关文章 -----
+related_post:
+  enable: true
+  limit: 4
+  date_type: created
+
+# ----- 图库模式 -----
+photofigcaption: true
+lazyload:
+  enable: true
+  field: site
+  placeholder: ''
+
+# ----- PWA -----
+pwa:
+  enable: false

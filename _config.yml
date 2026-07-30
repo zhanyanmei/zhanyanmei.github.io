@@ -1,24 +1,27 @@
 # Hexo Configuration
 ## Docs: https://hexo.io/docs/configuration.html
-## Source: https://github.com/hexojs/hexo/
 
 # Site
 title: 我的博客
 subtitle: 记录学习与生活
-description: 一个关于技术、学习与成长的博客
-keywords: 技术, 编程, 学习
+description: 一个关于技术、学习与成长的个人博客，分享编程、自动化测试、数据库相关技术文章。
+keywords: 技术, 编程, 自动化测试, Python, 数据库, 学习笔记
 author: zhanyanmei
 language: zh-CN
 timezone: Asia/Shanghai
 
 # URL
-## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
+## If your site is put in a subdirectory, set url as 'http://example.com/child' and root as '/child/'
 url: https://zhanyanmei.github.io
-permalink: :year/:month/:day/:title/
+root: /
+permalink: :abbrlink.html
+abbrlink:
+  alg: crc32      # 短链接算法，支持 crc32（短）和 crc16（更短）
+  rep: hex        # 十六进制格式
 permalink_defaults:
 pretty_urls:
-  trailing_index: true # Set to false to remove trailing 'index.html' from permalinks
-  trailing_html: true # Set to false to remove trailing '.html' from permalinks
+  trailing_index: false   # 去掉 URL 末尾的 index.html
+  trailing_html: false    # 去掉 URL 末尾的 .html
 
 # Directory
 source_dir: source
@@ -31,19 +34,21 @@ i18n_dir: :lang
 skip_render:
 
 # Writing
-new_post_name: :title.md # File name of new posts
+new_post_name: :title.md
 default_layout: post
-titlecase: false # Transform title into titlecase
+titlecase: false
 external_link:
-  enable: true # Open external links in new tab
-  field: site # Apply to the whole site
+  enable: true
+  field: site
   exclude: ''
 filename_case: 0
 render_drafts: false
-post_asset_folder: false
+post_asset_folder: true    # 开启资源文件夹（图片和文章放一起）
 relative_link: false
 future: true
-syntax_highlighter: highlight.js
+
+# 使用 Prism.js 代码高亮（更好的视觉效果）
+syntax_highlighter: prismjs
 highlight:
   line_number: true
   auto_detect: false
@@ -56,39 +61,33 @@ prismjs:
   tab_replace: ''
 
 # Home page setting
-# path: Root path for your blogs index page. (default = '')
-# per_page: Posts displayed per page. (0 = disable pagination)
-# order_by: Posts order. (Order by date descending by default)
 index_generator:
   path: ''
-  per_page: 10
+  per_page: 12
   order_by: -date
 
 # Category & Tag
 default_category: uncategorized
 category_map:
+  编程: programming
+  数据库: database
+  测试: testing
+  随笔: essay
 tag_map:
 
 # Metadata elements
-## https://developer.mozilla.org/en-US/docs/Web/HTML/Element/meta
 meta_generator: true
 
 # Date / Time format
-## Hexo uses Moment.js to parse and display date
-## You can customize the date format as defined in
-## http://momentjs.com/docs/#/displaying/format/
 date_format: YYYY-MM-DD
 time_format: HH:mm:ss
-## updated_option supports 'mtime', 'date', 'empty'
-updated_option: 'mtime'
+updated_option: mtime
 
 # Pagination
-## Set per_page to 0 to disable pagination
-per_page: 10
+per_page: 12
 pagination_dir: page
 
 # Include / Exclude file(s)
-## include:/exclude: options only apply to the 'source/' folder
 include:
 exclude:
 ignore:
@@ -96,9 +95,45 @@ ignore:
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: butterfly
 
 # Deployment
-## Docs: https://hexo.io/docs/one-command-deployment
 deploy:
   type: ''
+
+# ===== 插件配置 =====
+
+# 本地搜索
+search:
+  path: search.xml
+  field: post
+  content: true
+
+# RSS 订阅
+feed:
+  type:
+    - atom
+    - rss2
+  path:
+    - atom.xml
+    - rss2.xml
+  limit: 20
+  content: true
+  content_limit: 140
+  order_by: -date
+
+# 网站地图（SEO）
+sitemap:
+  path:
+    - sitemap.xml
+    - sitemap.txt
+  rel: true
+  tags: true
+  categories: true
+
+# 字数统计 & 阅读时间
+word_count:
+  enable: true
+  post_word_count: true
+  min2read: true
+  total_word_count: true
