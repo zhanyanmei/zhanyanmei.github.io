@@ -196,3 +196,7 @@ d:\其他\blog/
 - [Hexo 官方文档](https://hexo.io/zh-cn/docs/)
 - [Butterfly 主题文档](https://butterfly.js.org/)
 - [Font Awesome 图标库](https://fontawesome.com/icons)
+
+
+
+npx hexo new "标题" → 编辑 .md → npx hexo server(预览) → npx hexo generate(验证) → git commit & push → 30秒自动上线
