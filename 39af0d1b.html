@@ -1,0 +1,799 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Shell 脚本快速入门（小白总结） | 我的博客</title><meta name="author" content="zhanyanmei"><meta name="copyright" content="zhanyanmei"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="面向自动化测试&#x2F;运维小白的 Shell 脚本快速入门，覆盖变量、条件判断、循环、函数、重定向、文本三剑客等核心语法，附数据库测试实战脚本，快速上手写脚本。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Shell 脚本快速入门（小白总结）">
+<meta property="og:url" content="https://zhanyanmei.github.io/39af0d1b">
+<meta property="og:site_name" content="我的博客">
+<meta property="og:description" content="面向自动化测试&#x2F;运维小白的 Shell 脚本快速入门，覆盖变量、条件判断、循环、函数、重定向、文本三剑客等核心语法，附数据库测试实战脚本，快速上手写脚本。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://zhanyanmei.github.io/images/avatar.png">
+<meta property="article:published_time" content="2026-10-20T02:30:00.000Z">
+<meta property="article:modified_time" content="2026-10-30T02:06:51.289Z">
+<meta property="article:author" content="zhanyanmei">
+<meta property="article:tag" content="学习笔记">
+<meta property="article:tag" content="Shell">
+<meta property="article:tag" content="Linux">
+<meta property="article:tag" content="自动化脚本">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://zhanyanmei.github.io/images/avatar.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Shell 脚本快速入门（小白总结）",
+  "url": "https://zhanyanmei.github.io/39af0d1b",
+  "image": "https://zhanyanmei.github.io/images/avatar.png",
+  "datePublished": "2026-10-20T02:30:00.000Z",
+  "dateModified": "2026-10-30T02:06:51.289Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "zhanyanmei",
+      "url": "https://github.com/zhanyanmei"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://zhanyanmei.github.io/39af0d1b"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.6.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.3.1/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        const data = { value }
+
+        if (ttl != null) {
+          data.expiry = Date.now() + ttl * 86400000
+        }
+
+        localStorage.setItem(key, JSON.stringify(data))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return
+
+        try {
+          const data = JSON.parse(itemStr)
+
+          if (data.expiry && Date.now() > data.expiry) {
+            localStorage.removeItem(key)
+            return
+          }
+
+          return data.value
+        } catch {
+          localStorage.removeItem(key)
+        }
+      }
+    }
+
+    const scriptCache = new Map()
+    const cssCache = new Map()
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => {
+        if (scriptCache.has(url)) {
+          return scriptCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const script = document.createElement('script')
+
+          script.src = url
+          script.async = true
+
+          for (const key in attr) {
+            script.setAttribute(key, attr[key])
+          }
+
+          script.onload = resolve
+          script.onerror = reject
+
+          document.head.appendChild(script)
+        })
+
+        scriptCache.set(url, promise)
+
+        return promise
+      },
+      getCSS: (url, id) => {
+        if (cssCache.has(url)) {
+          return cssCache.get(url)
+        }
+
+        const promise = new Promise((resolve, reject) => {
+          const link = document.createElement('link')
+
+          link.rel = 'stylesheet'
+          link.href = url
+
+          if (id) {
+            link.id = id
+          }
+
+          link.onload = resolve
+          link.onerror = reject
+
+          document.head.appendChild(link)
+        })
+
+        cssCache.set(url, promise)
+
+        return promise
+      },
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+      const activateDarkMode = () => {
+        document.documentElement.dataset.theme = 'dark'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.dataset.theme = 'light'
+        if (metaThemeColor !== null) {
+          metaThemeColor.setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"prismjs","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: '复制成功',
+    error: '复制失败',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: '加载更多'
+  },
+  isPhotoFigcaption: true,
+  islazyloadPlugin: true,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Shell 脚本快速入门（小白总结）',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="我的博客" type="application/atom+xml">
+<link rel="alternate" href="/rss2.xml" title="我的博客" type="application/rss+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/projects/"><i class="fa-fw fas fa-code"></i><span> 项目</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">我的博客</span></a><a class="nav-page-title" href="/"><span class="site-name">Shell 脚本快速入门（小白总结）</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  返回首页</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/projects/"><i class="fa-fw fas fa-code"></i><span> 项目</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-user"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Shell 脚本快速入门（小白总结）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2026-10-20T02:30:00.000Z" title="发表于 2026-10-20 10:30:00">2026-10-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2026-10-30T02:06:51.289Z" title="更新于 2026-10-30 10:06:51">2026-10-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/programming/">编程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">总字数:</span><span class="word-count">45k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>2:45分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">浏览量:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><blockquote>
+<p><strong>文章目的</strong>：面向需要在 Linux 上写脚本做自动化测试的小白，意在快速入门、能看懂并独立编写测试脚本。本文覆盖 Shell 核心语法 + 常用命令，看完即可上手写批量任务、备份、日志分析等脚本。</p>
+</blockquote>
+<h2 id="学习平台"><a href="#学习平台" class="headerlink" title="学习平台"></a>学习平台</h2><table>
+<thead>
+<tr>
+<th>平台</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="https://www.runoob.com/linux/linux-shell.html">菜鸟教程 Shell</a></td>
+<td>语法速查，忘了翻一眼</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="https://www.linuxprobe.com/">Linux 就该这么学</a></td>
+<td>中文系统教程，适合入门</td>
+</tr>
+<tr>
+<td><code>man &lt;命令&gt;</code> &#x2F; <code>&lt;命令&gt; --help</code></td>
+<td>系统自带手册，最权威</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="一、Shell-是什么-第一个脚本"><a href="#一、Shell-是什么-第一个脚本" class="headerlink" title="一、Shell 是什么 &amp; 第一个脚本"></a>一、Shell 是什么 &amp; 第一个脚本</h2><p>Shell 是 Linux 的<strong>命令行解释器</strong>，你敲的每条命令都是在和 Shell 交互。把命令写进文件，就变成了<strong>脚本</strong>，可以批量、重复执行——这正是自动化测试要的。</p>
+<p>一个最简单的脚本：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/bash</span>
+<span class="token comment"># 这是我的第一个脚本</span>
+
+<span class="token builtin class-name">echo</span> <span class="token string">"Hello, Shell!"</span>
+<span class="token assign-left variable">name</span><span class="token operator">=</span><span class="token string">"张三"</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"你好，<span class="token variable">$&#123;name&#125;</span>"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<table>
+<thead>
+<tr>
+<th>要点</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>#!/bin/bash</code></td>
+<td>shebang，声明用哪个解释器执行，必须放第一行</td>
+</tr>
+<tr>
+<td><code>#</code></td>
+<td>注释，Shell 里没有多行注释</td>
+</tr>
+<tr>
+<td><code>echo</code></td>
+<td>打印输出</td>
+</tr>
+</tbody></table>
+<p>两种运行方式：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 方式一：直接执行（需要可执行权限）</span>
+<span class="token function">chmod</span> +x test.sh     <span class="token comment"># 加执行权限</span>
+./test.sh
+
+<span class="token comment"># 方式二：用 bash 执行（不需要可执行权限，最常用）</span>
+<span class="token function">bash</span> test.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>💡 写脚本建议统一用 <code>bash 脚本名.sh</code> 运行，省去加权限的麻烦；脚本文件后缀 <code>.sh</code> 只是约定，不是必须。</p>
+</blockquote>
+<hr>
+<h2 id="二、变量"><a href="#二、变量" class="headerlink" title="二、变量"></a>二、变量</h2><h3 id="1-定义与引用"><a href="#1-定义与引用" class="headerlink" title="1. 定义与引用"></a>1. 定义与引用</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">name</span><span class="token operator">=</span><span class="token string">"zhangsan"</span>     <span class="token comment"># 定义变量：等号两边【不能】有空格</span>
+<span class="token assign-left variable">age</span><span class="token operator">=</span><span class="token number">25</span>              <span class="token comment"># 数字也是字符串</span>
+
+<span class="token builtin class-name">echo</span> <span class="token variable">$name</span>          <span class="token comment"># 引用变量 -> zhangsan</span>
+<span class="token builtin class-name">echo</span> <span class="token variable">$&#123;name&#125;</span>        <span class="token comment"># 花括号形式更安全，明确边界</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"<span class="token variable">$&#123;name&#125;</span>是<span class="token variable">$&#123;age&#125;</span>岁"</span>   <span class="token comment"># 字符串拼接</span>
+
+<span class="token builtin class-name">readonly</span> <span class="token assign-left variable">PI</span><span class="token operator">=</span><span class="token number">3.14</span>    <span class="token comment"># 只读变量，不能修改</span>
+<span class="token builtin class-name">unset</span> name          <span class="token comment"># 删除变量</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>⚠️ <strong>新手最易错</strong>：<code>name = &quot;zhangsan&quot;</code>（等号两边有空格）会报错。赋值时等号两边<strong>紧贴</strong>。</p>
+</blockquote>
+<h3 id="2-特殊变量（脚本必会）"><a href="#2-特殊变量（脚本必会）" class="headerlink" title="2. 特殊变量（脚本必会）"></a>2. 特殊变量（脚本必会）</h3><table>
+<thead>
+<tr>
+<th>变量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>$0</code></td>
+<td>脚本名本身</td>
+</tr>
+<tr>
+<td><code>$1</code> ~ <code>$9</code></td>
+<td>第 1~9 个参数</td>
+</tr>
+<tr>
+<td><code>$#</code></td>
+<td>参数个数</td>
+</tr>
+<tr>
+<td><code>$@</code></td>
+<td>所有参数（各自独立）</td>
+</tr>
+<tr>
+<td><code>$*</code></td>
+<td>所有参数（拼成一个整体）</td>
+</tr>
+<tr>
+<td><code>$?</code></td>
+<td>上一条命令的退出码，<strong>0 表示成功</strong></td>
+</tr>
+<tr>
+<td><code>$$</code></td>
+<td>当前进程 PID</td>
+</tr>
+<tr>
+<td><code>$!</code></td>
+<td>最后一个后台进程 PID</td>
+</tr>
+</tbody></table>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/bash</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"脚本名：<span class="token variable">$0</span>"</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"第一个参数：<span class="token variable">$1</span>"</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"参数个数：<span class="token variable">$#</span>"</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"所有参数：<span class="token variable">$@</span>"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p><code>$?</code> 是判断命令成败的关键，后面条件判断、测试脚本断言全靠它。</p>
+</blockquote>
+<h3 id="3-命令替换与环境变量"><a href="#3-命令替换与环境变量" class="headerlink" title="3. 命令替换与环境变量"></a>3. 命令替换与环境变量</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">now</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">date</span><span class="token variable">)</span></span>         <span class="token comment"># 把命令结果存进变量（推荐写法）</span>
+<span class="token comment"># now=`date`        # 反引号旧写法，效果相同</span>
+
+<span class="token builtin class-name">echo</span> <span class="token string">"当前时间：<span class="token variable">$now</span>"</span>
+
+<span class="token comment"># 环境变量（系统已定义，直接读）</span>
+<span class="token builtin class-name">echo</span> <span class="token environment constant">$PATH</span>          <span class="token comment"># 命令搜索路径</span>
+<span class="token builtin class-name">echo</span> <span class="token environment constant">$HOME</span>          <span class="token comment"># 家目录</span>
+<span class="token builtin class-name">echo</span> <span class="token environment constant">$USER</span>          <span class="token comment"># 当前用户</span>
+
+<span class="token comment"># 自定义变量默认只在当前脚本内有效，导出后子进程才能用</span>
+<span class="token builtin class-name">export</span> <span class="token assign-left variable">MY_VAR</span><span class="token operator">=</span><span class="token string">"hello"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<h2 id="三、字符串操作"><a href="#三、字符串操作" class="headerlink" title="三、字符串操作"></a>三、字符串操作</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">str</span><span class="token operator">=</span><span class="token string">"hello world"</span>
+
+<span class="token builtin class-name">echo</span> <span class="token variable">$&#123;<span class="token operator">#</span>str&#125;</span>            <span class="token comment"># 长度 -> 11</span>
+<span class="token builtin class-name">echo</span> <span class="token variable">$&#123;str<span class="token operator">:</span>0<span class="token operator">:</span>5&#125;</span>         <span class="token comment"># 截取，从 0 开始取 5 个 -> hello</span>
+<span class="token builtin class-name">echo</span> <span class="token variable">$&#123;str<span class="token operator">/</span>world<span class="token operator">/</span>中国&#125;</span>   <span class="token comment"># 替换 -> hello 中国</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p>单引号 vs 双引号（重要）：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">name</span><span class="token operator">=</span><span class="token string">"张三"</span>
+<span class="token builtin class-name">echo</span> <span class="token string">'你好 $name'</span>   <span class="token comment"># 单引号：原样输出 -> 你好 $name</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"你好 <span class="token variable">$name</span>"</span>   <span class="token comment"># 双引号：解析变量 -> 你好 张三</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>💡 记一句：<strong>单引号不解析，双引号解析变量</strong>。要输出 <code>$</code> 本身或纯文本用单引号。</p>
+</blockquote>
+<hr>
+<h2 id="四、数组"><a href="#四、数组" class="headerlink" title="四、数组"></a>四、数组</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">arr</span><span class="token operator">=</span><span class="token punctuation">(</span>apple banana cherry<span class="token punctuation">)</span>   <span class="token comment"># 定义，空格分隔</span>
+
+<span class="token builtin class-name">echo</span> <span class="token variable">$&#123;arr<span class="token punctuation">[</span>0<span class="token punctuation">]</span>&#125;</span>      <span class="token comment"># 第一个 -> apple</span>
+<span class="token builtin class-name">echo</span> <span class="token variable">$&#123;arr<span class="token punctuation">[</span>1<span class="token punctuation">]</span>&#125;</span>      <span class="token comment"># 第二个 -> banana</span>
+<span class="token builtin class-name">echo</span> <span class="token variable">$&#123;arr<span class="token punctuation">[</span>@<span class="token punctuation">]</span>&#125;</span>      <span class="token comment"># 所有元素</span>
+<span class="token builtin class-name">echo</span> <span class="token variable">$&#123;<span class="token operator">#</span>arr<span class="token punctuation">[</span>@<span class="token punctuation">]</span>&#125;</span>     <span class="token comment"># 元素个数 -> 3</span>
+
+arr<span class="token punctuation">[</span><span class="token number">3</span><span class="token punctuation">]</span><span class="token operator">=</span>date         <span class="token comment"># 追加/修改</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>🎯 <strong>实战</strong>：数据库集群的节点 IP 列表用数组存，遍历即可批量操作（见文末实战）。</p>
+</blockquote>
+<hr>
+<h2 id="五、条件判断"><a href="#五、条件判断" class="headerlink" title="五、条件判断"></a>五、条件判断</h2><h3 id="1-if-语句"><a href="#1-if-语句" class="headerlink" title="1. if 语句"></a>1. if 语句</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token assign-left variable">score</span><span class="token operator">=</span><span class="token number">85</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token variable">$score</span> <span class="token parameter variable">-ge</span> <span class="token number">90</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"优秀"</span>
+<span class="token keyword">elif</span> <span class="token punctuation">[</span> <span class="token variable">$score</span> <span class="token parameter variable">-ge</span> <span class="token number">60</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"及格"</span>
+<span class="token keyword">else</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"不及格"</span>
+<span class="token keyword">fi</span>                          <span class="token comment"># if 结束必须写 fi</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>⚠️ <code>[ ]</code> 方括号<strong>内侧两边都要有空格</strong>：<code>[ $score -ge 90 ]</code> 正确，<code>[$score -ge 90]</code> 报错。</p>
+</blockquote>
+<h3 id="2-判断条件速查"><a href="#2-判断条件速查" class="headerlink" title="2. 判断条件速查"></a>2. 判断条件速查</h3><p>数字比较：</p>
+<table>
+<thead>
+<tr>
+<th>写法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-eq</code></td>
+<td>等于</td>
+</tr>
+<tr>
+<td><code>-ne</code></td>
+<td>不等于</td>
+</tr>
+<tr>
+<td><code>-gt</code> &#x2F; <code>-ge</code></td>
+<td>大于 &#x2F; 大于等于</td>
+</tr>
+<tr>
+<td><code>-lt</code> &#x2F; <code>-le</code></td>
+<td>小于 &#x2F; 小于等于</td>
+</tr>
+</tbody></table>
+<p>字符串比较：</p>
+<table>
+<thead>
+<tr>
+<th>写法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>=</code> &#x2F; <code>==</code></td>
+<td>相等</td>
+</tr>
+<tr>
+<td><code>!=</code></td>
+<td>不等</td>
+</tr>
+<tr>
+<td><code>-z</code></td>
+<td>长度为 0（空）</td>
+</tr>
+<tr>
+<td><code>-n</code></td>
+<td>长度非 0（非空）</td>
+</tr>
+</tbody></table>
+<p>文件判断（测试脚本常用）：</p>
+<table>
+<thead>
+<tr>
+<th>写法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-e</code></td>
+<td>文件存在</td>
+</tr>
+<tr>
+<td><code>-f</code></td>
+<td>是普通文件</td>
+</tr>
+<tr>
+<td><code>-d</code></td>
+<td>是目录</td>
+</tr>
+<tr>
+<td><code>-r</code> &#x2F; <code>-w</code> &#x2F; <code>-x</code></td>
+<td>可读 &#x2F; 可写 &#x2F; 可执行</td>
+</tr>
+<tr>
+<td><code>-s</code></td>
+<td>文件非空</td>
+</tr>
+</tbody></table>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 参数为空判断</span>
+<span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token parameter variable">-z</span> <span class="token string">"<span class="token variable">$1</span>"</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"用法：<span class="token variable">$0</span> &lt;文件名>"</span>
+    <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+<span class="token keyword">fi</span>
+
+<span class="token comment"># 文件存在判断</span>
+<span class="token keyword">if</span> <span class="token punctuation">[</span> <span class="token parameter variable">-f</span> /etc/passwd <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"文件存在"</span>
+<span class="token keyword">fi</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="3-进阶：-与逻辑运算"><a href="#3-进阶：-与逻辑运算" class="headerlink" title="3. 进阶：[[ ]] 与逻辑运算"></a>3. 进阶：<code>[[ ]]</code> 与逻辑运算</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># [[ ]] 是 bash 增强版，支持 &amp;&amp; || 和正则</span>
+<span class="token keyword">if</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token variable">$1</span> <span class="token operator">==</span> <span class="token string">"start"</span> <span class="token operator">||</span> <span class="token variable">$1</span> <span class="token operator">==</span> <span class="token string">"stop"</span> <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"合法命令"</span>
+<span class="token keyword">fi</span>
+
+<span class="token comment"># 正则匹配（=~）</span>
+<span class="token keyword">if</span> <span class="token punctuation">[</span><span class="token punctuation">[</span> <span class="token string">"<span class="token variable">$ip</span>"</span> <span class="token operator">=~</span> ^192<span class="token punctuation">\</span>.168<span class="token punctuation">\</span>. <span class="token punctuation">]</span><span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"是内网 IP"</span>
+<span class="token keyword">fi</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<h2 id="六、循环"><a href="#六、循环" class="headerlink" title="六、循环"></a>六、循环</h2><h3 id="1-for-循环"><a href="#1-for-循环" class="headerlink" title="1. for 循环"></a>1. for 循环</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 遍历列表</span>
+<span class="token keyword">for</span> <span class="token for-or-select variable">i</span> <span class="token keyword">in</span> <span class="token number">1</span> <span class="token number">2</span> <span class="token number">3</span> <span class="token number">4</span> <span class="token number">5</span><span class="token punctuation">;</span> <span class="token keyword">do</span>
+    <span class="token builtin class-name">echo</span> <span class="token variable">$i</span>
+<span class="token keyword">done</span>
+
+<span class="token comment"># 遍历序列</span>
+<span class="token keyword">for</span> <span class="token for-or-select variable">i</span> <span class="token keyword">in</span> <span class="token punctuation">&#123;</span><span class="token number">1</span><span class="token punctuation">..</span><span class="token number">10</span><span class="token punctuation">&#125;</span><span class="token punctuation">;</span> <span class="token keyword">do</span>
+    <span class="token builtin class-name">echo</span> <span class="token variable">$i</span>
+<span class="token keyword">done</span>
+
+<span class="token comment"># 遍历文件（最常用：批量处理）</span>
+<span class="token keyword">for</span> <span class="token for-or-select variable">file</span> <span class="token keyword">in</span> *.sh<span class="token punctuation">;</span> <span class="token keyword">do</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"处理 <span class="token variable">$file</span>"</span>
+<span class="token keyword">done</span>
+
+<span class="token comment"># C 语言风格</span>
+<span class="token keyword">for</span> <span class="token variable"><span class="token punctuation">((</span>i<span class="token operator">=</span><span class="token number">0</span><span class="token punctuation">;</span> i<span class="token operator">&lt;</span><span class="token number">5</span><span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">))</span></span><span class="token punctuation">;</span> <span class="token keyword">do</span>
+    <span class="token builtin class-name">echo</span> <span class="token variable">$i</span>
+<span class="token keyword">done</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-while-until-循环"><a href="#2-while-until-循环" class="headerlink" title="2. while &#x2F; until 循环"></a>2. while &#x2F; until 循环</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># while：条件成立时循环</span>
+<span class="token assign-left variable">count</span><span class="token operator">=</span><span class="token number">1</span>
+<span class="token keyword">while</span> <span class="token punctuation">[</span> <span class="token variable">$count</span> <span class="token parameter variable">-le</span> <span class="token number">3</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">do</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"第 <span class="token variable">$count</span> 次"</span>
+    <span class="token assign-left variable">count</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$((</span>count <span class="token operator">+</span> <span class="token number">1</span><span class="token variable">))</span></span>     <span class="token comment"># 注意：算术运算要用 $(( ))</span>
+<span class="token keyword">done</span>
+
+<span class="token comment"># until：条件不成立时循环（直到成立才停）</span>
+<span class="token assign-left variable">count</span><span class="token operator">=</span><span class="token number">1</span>
+<span class="token keyword">until</span> <span class="token punctuation">[</span> <span class="token variable">$count</span> <span class="token parameter variable">-gt</span> <span class="token number">3</span> <span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token keyword">do</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"第 <span class="token variable">$count</span> 次"</span>
+    <span class="token assign-left variable">count</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$((</span>count <span class="token operator">+</span> <span class="token number">1</span><span class="token variable">))</span></span>
+<span class="token keyword">done</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>💡 Shell 里做算术用 <code>$(( ))</code>，不能用 <code>count + 1</code>。</p>
+</blockquote>
+<h3 id="3-case-语句（多分支，比一堆-if-清爽）"><a href="#3-case-语句（多分支，比一堆-if-清爽）" class="headerlink" title="3. case 语句（多分支，比一堆 if 清爽）"></a>3. case 语句（多分支，比一堆 if 清爽）</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token keyword">case</span> <span class="token variable">$1</span> <span class="token keyword">in</span>
+    start<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> <span class="token string">"启动..."</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    stop<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> <span class="token string">"停止..."</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    restart<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> <span class="token string">"重启..."</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+    *<span class="token punctuation">)</span>
+        <span class="token builtin class-name">echo</span> <span class="token string">"用法：<span class="token variable">$0</span> &#123;start|stop|restart&#125;"</span>
+        <span class="token builtin class-name">exit</span> <span class="token number">1</span>
+        <span class="token punctuation">;</span><span class="token punctuation">;</span>
+<span class="token keyword">esac</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="4-循环控制"><a href="#4-循环控制" class="headerlink" title="4. 循环控制"></a>4. 循环控制</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">break</span>       <span class="token comment"># 跳出整个循环</span>
+<span class="token builtin class-name">continue</span>    <span class="token comment"># 跳过本次，继续下一次</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
+
+<hr>
+<h2 id="七、函数"><a href="#七、函数" class="headerlink" title="七、函数"></a>七、函数</h2><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 定义函数</span>
+<span class="token function-name function">say_hello</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token builtin class-name">local</span> <span class="token assign-left variable">name</span><span class="token operator">=</span><span class="token variable">$1</span>      <span class="token comment"># local 声明局部变量</span>
+    <span class="token builtin class-name">echo</span> <span class="token string">"你好，<span class="token variable">$name</span>"</span>
+    <span class="token builtin class-name">return</span> <span class="token number">0</span>           <span class="token comment"># return 返回状态码（0 成功）</span>
+<span class="token punctuation">&#125;</span>
+
+<span class="token comment"># 调用：直接写函数名，参数空格隔开</span>
+say_hello 张三          <span class="token comment"># -> 你好，张三</span>
+
+<span class="token comment"># 函数内 $1 是参数，$? 是返回值</span>
+<span class="token function-name function">add</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">&#123;</span>
+    <span class="token builtin class-name">echo</span> <span class="token variable"><span class="token variable">$((</span> $<span class="token number">1</span> <span class="token operator">+</span> $<span class="token number">2</span> <span class="token variable">))</span></span>
+<span class="token punctuation">&#125;</span>
+<span class="token assign-left variable">result</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">add</span> <span class="token number">3</span> <span class="token number">5</span><span class="token variable">)</span></span>      <span class="token comment"># 用命令替换接住结果 -> 8</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>💡 Shell 函数没有 Python 那样的 <code>return 值</code>，<code>return</code> 只返回状态码（0&#x2F;非0）；要返回数据用 <code>echo</code> + 命令替换接住。</p>
+</blockquote>
+<hr>
+<h2 id="八、重定向与管道"><a href="#八、重定向与管道" class="headerlink" title="八、重定向与管道"></a>八、重定向与管道</h2><table>
+<thead>
+<tr>
+<th>写法</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>cmd &gt; file</code></td>
+<td>标准输出覆盖写到文件</td>
+</tr>
+<tr>
+<td><code>cmd &gt;&gt; file</code></td>
+<td>标准输出追加到文件</td>
+</tr>
+<tr>
+<td><code>cmd 2&gt; file</code></td>
+<td>错误输出写到文件</td>
+</tr>
+<tr>
+<td><code>cmd &amp;&gt; file</code></td>
+<td>标准输出和错误一起写</td>
+</tr>
+<tr>
+<td><code>cmd &lt; file</code></td>
+<td>从文件读输入</td>
+</tr>
+<tr>
+<td><code>cmd1 | cmd2</code></td>
+<td>管道：把 cmd1 输出作为 cmd2 输入</td>
+</tr>
+<tr>
+<td><code>/dev/null</code></td>
+<td>「黑洞」，丢弃输出</td>
+</tr>
+</tbody></table>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token builtin class-name">echo</span> <span class="token string">"hello"</span> <span class="token operator">></span> out.txt        <span class="token comment"># 覆盖写</span>
+<span class="token builtin class-name">echo</span> <span class="token string">"world"</span> <span class="token operator">>></span> out.txt       <span class="token comment"># 追加写</span>
+<span class="token function">ls</span> /nonexist <span class="token operator"><span class="token file-descriptor important">2</span>></span> err.txt       <span class="token comment"># 错误重定向</span>
+<span class="token function">ls</span> /nonexist <span class="token operator"><span class="token file-descriptor important">2</span>></span> /dev/null     <span class="token comment"># 丢弃错误信息</span>
+
+<span class="token comment"># 管道链：查看进程 -> 过滤 -> 计数</span>
+<span class="token function">ps</span> <span class="token parameter variable">-ef</span> <span class="token operator">|</span> <span class="token function">grep</span> nginx <span class="token operator">|</span> <span class="token function">wc</span> <span class="token parameter variable">-l</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>🎯 测试脚本里常用 <code>命令 &gt; /dev/null 2&gt;&amp;1</code> 静默执行，只用 <code>$?</code> 判断成败。</p>
+</blockquote>
+<hr>
+<h2 id="九、常用命令速查"><a href="#九、常用命令速查" class="headerlink" title="九、常用命令速查"></a>九、常用命令速查</h2><h3 id="1-文件与目录"><a href="#1-文件与目录" class="headerlink" title="1. 文件与目录"></a>1. 文件与目录</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+<th>常用示例</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ls</code></td>
+<td>列目录</td>
+<td><code>ls -lh</code>（带大小）、<code>ls -lrt</code>（按时间倒序）</td>
+</tr>
+<tr>
+<td><code>cd</code> &#x2F; <code>pwd</code></td>
+<td>切换 &#x2F; 显示当前目录</td>
+<td><code>cd /data &amp;&amp; pwd</code></td>
+</tr>
+<tr>
+<td><code>cp</code> &#x2F; <code>mv</code> &#x2F; <code>rm</code></td>
+<td>复制 &#x2F; 移动 &#x2F; 删除</td>
+<td><code>cp -r a/ b/</code>、<code>rm -rf dir/</code></td>
+</tr>
+<tr>
+<td><code>mkdir</code></td>
+<td>建目录</td>
+<td><code>mkdir -p a/b/c</code>（递归创建）</td>
+</tr>
+<tr>
+<td><code>touch</code></td>
+<td>建空文件</td>
+<td><code>touch a.txt</code></td>
+</tr>
+<tr>
+<td><code>cat</code> &#x2F; <code>head</code> &#x2F; <code>tail</code></td>
+<td>查看文件</td>
+<td><code>head -n 10</code>、<code>tail -n 20</code></td>
+</tr>
+<tr>
+<td><code>tail -f</code></td>
+<td>实时跟踪日志</td>
+<td><code>tail -f app.log</code>（测试看日志必备）</td>
+</tr>
+<tr>
+<td><code>find</code></td>
+<td>查找文件</td>
+<td><code>find / -name &quot;*.log&quot;</code></td>
+</tr>
+<tr>
+<td><code>wc</code></td>
+<td>统计</td>
+<td><code>wc -l</code>（行数）</td>
+</tr>
+</tbody></table>
+<h3 id="2-文本三剑客：grep-sed-awk"><a href="#2-文本三剑客：grep-sed-awk" class="headerlink" title="2. 文本三剑客：grep &#x2F; sed &#x2F; awk"></a>2. 文本三剑客：grep &#x2F; sed &#x2F; awk</h3><p><strong>grep</strong> —— 过滤查找：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">grep</span> <span class="token string">"ERROR"</span> app.log          <span class="token comment"># 找含 ERROR 的行</span>
+<span class="token function">grep</span> <span class="token parameter variable">-i</span> <span class="token string">"error"</span> app.log       <span class="token comment"># 忽略大小写</span>
+<span class="token function">grep</span> <span class="token parameter variable">-v</span> <span class="token string">"DEBUG"</span> app.log       <span class="token comment"># 反选（排除）</span>
+<span class="token function">grep</span> <span class="token parameter variable">-c</span> <span class="token string">"ERROR"</span> app.log       <span class="token comment"># 计数</span>
+<span class="token function">grep</span> <span class="token parameter variable">-r</span> <span class="token string">"keyword"</span> /data/logs/ <span class="token comment"># 递归搜目录</span>
+<span class="token function">grep</span> <span class="token parameter variable">-E</span> <span class="token string">"error|warn"</span> app.log  <span class="token comment"># 正则（多关键词）</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>sed</strong> —— 查找替换、按行操作：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">sed</span> <span class="token string">'s/old/new/'</span> <span class="token function">file</span>         <span class="token comment"># 每行替换第一个</span>
+<span class="token function">sed</span> <span class="token string">'s/old/new/g'</span> <span class="token function">file</span>        <span class="token comment"># 全局替换</span>
+<span class="token function">sed</span> <span class="token parameter variable">-i</span> <span class="token string">'s/old/new/g'</span> <span class="token function">file</span>     <span class="token comment"># 原地修改（写回文件）</span>
+<span class="token function">sed</span> <span class="token parameter variable">-n</span> <span class="token string">'5,10p'</span> <span class="token function">file</span>           <span class="token comment"># 打印第 5~10 行</span>
+<span class="token function">sed</span> <span class="token string">'/error/d'</span> <span class="token function">file</span>           <span class="token comment"># 删除含 error 的行</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<p><strong>awk</strong> —— 按列处理（日志分析神器）：</p>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">awk</span> <span class="token string">'&#123;print $1, $3&#125;'</span> <span class="token function">file</span>              <span class="token comment"># 打印第 1、3 列（默认空格分隔）</span>
+<span class="token function">awk</span> -F: <span class="token string">'&#123;print $1&#125;'</span> /etc/passwd       <span class="token comment"># -F 指定分隔符</span>
+<span class="token function">awk</span> <span class="token string">'$3 > 100 &#123;print $1&#125;'</span> <span class="token function">file</span>         <span class="token comment"># 第 3 列大于 100 才打印</span>
+<span class="token function">awk</span> <span class="token string">'&#123;sum += $1&#125; END &#123;print sum&#125;'</span> <span class="token function">file</span> <span class="token comment"># 第 1 列求和</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="3-进程与资源"><a href="#3-进程与资源" class="headerlink" title="3. 进程与资源"></a>3. 进程与资源</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ps -ef</code></td>
+<td>查看所有进程</td>
+</tr>
+<tr>
+<td><code>top</code></td>
+<td>实时资源监控（<code>q</code> 退出）</td>
+</tr>
+<tr>
+<td><code>kill</code> &#x2F; <code>kill -9</code></td>
+<td>结束进程</td>
+</tr>
+<tr>
+<td><code>nohup cmd &amp;</code></td>
+<td>后台运行，退出终端不中断</td>
+</tr>
+<tr>
+<td><code>df -h</code> &#x2F; <code>du -sh</code></td>
+<td>磁盘使用</td>
+</tr>
+<tr>
+<td><code>free -h</code></td>
+<td>内存使用</td>
+</tr>
+</tbody></table>
+<h3 id="4-权限、网络、压缩"><a href="#4-权限、网络、压缩" class="headerlink" title="4. 权限、网络、压缩"></a>4. 权限、网络、压缩</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token function">chmod</span> +x script.sh       <span class="token comment"># 加执行权限</span>
+<span class="token function">chmod</span> <span class="token number">755</span> script.sh      <span class="token comment"># 数字法：rwxr-xr-x</span>
+<span class="token function">chown</span> user:group <span class="token function">file</span>    <span class="token comment"># 改属主</span>
+
+<span class="token function">ping</span> <span class="token parameter variable">-c</span> <span class="token number">3</span> <span class="token number">192.168</span>.1.10   <span class="token comment"># ping 3 次</span>
+ss <span class="token parameter variable">-tlnp</span>                 <span class="token comment"># 查看监听端口</span>
+<span class="token function">curl</span> <span class="token parameter variable">-I</span> https://example.com   <span class="token comment"># 查看响应头</span>
+
+<span class="token function">tar</span> <span class="token parameter variable">-czf</span> bak.tar.gz dir/ <span class="token comment"># 打包压缩</span>
+<span class="token function">tar</span> <span class="token parameter variable">-xzf</span> bak.tar.gz      <span class="token comment"># 解压</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<h2 id="十、新手易错点"><a href="#十、新手易错点" class="headerlink" title="十、新手易错点"></a>十、新手易错点</h2><ol>
+<li><strong>等号两边不能有空格</strong>：<code>a=1</code> 对，<code>a = 1</code> 错。</li>
+<li><strong><code>[ ]</code> 内侧要有空格</strong>：<code>[ $a -eq 1 ]</code> 对，<code>[$a -eq 1]</code> 错。</li>
+<li><strong>单引号 vs 双引号</strong>：单引号原样输出，双引号解析变量。</li>
+<li>**算术要用 <code>$(( ))</code>**：没有 <code>i++</code>，用 <code>i=$((i+1))</code>。</li>
+<li><strong><code>$?</code> 为 0 才代表成功</strong>：非 0 是失败，判断命令是否执行成功看它。</li>
+<li><strong>Windows 换行符坑</strong>：在 Windows 上用记事本编辑脚本，换行是 <code>\r\n</code>，Linux 会报 <code>\r</code> 错误。解决：<code>dos2unix script.sh</code>，或在 Vim 里 <code>:set ff=unix</code> 保存。</li>
+<li><strong><code>set -e</code> 让脚本出错即停</strong>：加上后任一命令失败立即退出，测试脚本推荐加。</li>
+</ol>
+<pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/bash</span>
+<span class="token builtin class-name">set</span> <span class="token parameter variable">-e</span>          <span class="token comment"># 出错立即退出</span>
+<span class="token builtin class-name">set</span> <span class="token parameter variable">-u</span>          <span class="token comment"># 使用未定义变量报错</span>
+<span class="token builtin class-name">set</span> <span class="token parameter variable">-x</span>          <span class="token comment"># 调试模式，打印每条执行的命令（排查用，用完记得删）</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<h2 id="十一、实战脚本（结合数据库测试）"><a href="#十一、实战脚本（结合数据库测试）" class="headerlink" title="十一、实战脚本（结合数据库测试）"></a>十一、实战脚本（结合数据库测试）</h2><h3 id="1-批量检查集群节点连通性"><a href="#1-批量检查集群节点连通性" class="headerlink" title="1. 批量检查集群节点连通性"></a>1. 批量检查集群节点连通性</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/bash</span>
+<span class="token comment"># 检查金仓数据库集群各节点是否 ping 通</span>
+<span class="token assign-left variable">nodes</span><span class="token operator">=</span><span class="token punctuation">(</span><span class="token number">192.168</span>.1.10 <span class="token number">192.168</span>.1.11 <span class="token number">192.168</span>.1.12<span class="token punctuation">)</span>
+
+<span class="token keyword">for</span> <span class="token for-or-select variable">ip</span> <span class="token keyword">in</span> <span class="token string">"<span class="token variable">$&#123;nodes<span class="token punctuation">[</span>@<span class="token punctuation">]</span>&#125;</span>"</span><span class="token punctuation">;</span> <span class="token keyword">do</span>
+    <span class="token keyword">if</span> <span class="token function">ping</span> <span class="token parameter variable">-c</span> <span class="token number">1</span> <span class="token parameter variable">-W</span> <span class="token number">1</span> <span class="token string">"<span class="token variable">$ip</span>"</span> <span class="token operator">></span> /dev/null <span class="token operator"><span class="token file-descriptor important">2</span>></span><span class="token file-descriptor important">&amp;1</span><span class="token punctuation">;</span> <span class="token keyword">then</span>
+        <span class="token builtin class-name">echo</span> <span class="token string">"[OK]   <span class="token variable">$ip</span> 可达"</span>
+    <span class="token keyword">else</span>
+        <span class="token builtin class-name">echo</span> <span class="token string">"[FAIL] <span class="token variable">$ip</span> 不通"</span>
+    <span class="token keyword">fi</span>
+<span class="token keyword">done</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<h3 id="2-数据库定时备份脚本"><a href="#2-数据库定时备份脚本" class="headerlink" title="2. 数据库定时备份脚本"></a>2. 数据库定时备份脚本</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token shebang important">#!/bin/bash</span>
+<span class="token comment"># 每天备份数据库，文件名带日期，保留最近 7 天</span>
+<span class="token assign-left variable">DB_NAME</span><span class="token operator">=</span><span class="token string">"ndm"</span>
+<span class="token assign-left variable">BACKUP_DIR</span><span class="token operator">=</span><span class="token string">"/data/backup"</span>
+<span class="token assign-left variable">DATE</span><span class="token operator">=</span><span class="token variable"><span class="token variable">$(</span><span class="token function">date</span> +%Y%m%d_%H%M%S<span class="token variable">)</span></span>
+
+<span class="token function">mkdir</span> <span class="token parameter variable">-p</span> <span class="token string">"<span class="token variable">$BACKUP_DIR</span>"</span>
+
+<span class="token comment"># 金仓/PostgreSQL 协议用 sys_dump / pg_dump，按实际改</span>
+pg_dump <span class="token string">"<span class="token variable">$DB_NAME</span>"</span> <span class="token operator">></span> <span class="token string">"<span class="token variable">$BACKUP_DIR</span>/<span class="token variable">$&#123;DB_NAME&#125;</span>_<span class="token variable">$&#123;DATE&#125;</span>.sql"</span>
+
+<span class="token comment"># 删除 7 天前的旧备份</span>
+<span class="token function">find</span> <span class="token string">"<span class="token variable">$BACKUP_DIR</span>"</span> <span class="token parameter variable">-name</span> <span class="token string">"*.sql"</span> <span class="token parameter variable">-mtime</span> +7 <span class="token parameter variable">-delete</span>
+
+<span class="token builtin class-name">echo</span> <span class="token string">"备份完成：<span class="token variable">$&#123;DB_NAME&#125;</span>_<span class="token variable">$&#123;DATE&#125;</span>.sql"</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<blockquote>
+<p>配上 crontab 定时任务：<code>0 2 * * * /data/backup.sh</code>，每天凌晨 2 点自动备份。</p>
+</blockquote>
+<h3 id="3-日志错误分析"><a href="#3-日志错误分析" class="headerlink" title="3. 日志错误分析"></a>3. 日志错误分析</h3><pre class="line-numbers language-bash" data-language="bash"><code class="language-bash"><span class="token comment"># 统计日志中各类错误出现次数</span>
+<span class="token function">grep</span> <span class="token parameter variable">-oE</span> <span class="token string">"ERROR|WARN|FATAL"</span> app.log <span class="token operator">|</span> <span class="token function">sort</span> <span class="token operator">|</span> <span class="token function">uniq</span> <span class="token parameter variable">-c</span>
+
+<span class="token comment"># 找出响应时间最慢的 10 条请求（假设第 3 列是耗时毫秒）</span>
+<span class="token function">awk</span> <span class="token string">'&#123;print $3, $0&#125;'</span> app.log <span class="token operator">|</span> <span class="token function">sort</span> <span class="token parameter variable">-nr</span> <span class="token operator">|</span> <span class="token function">head</span> <span class="token parameter variable">-10</span><span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre>
+
+<hr>
+<h2 id="下一步"><a href="#下一步" class="headerlink" title="下一步"></a>下一步</h2><p>掌握以上语法和命令，就可以：</p>
+<ul>
+<li><strong>写批量任务</strong>：批量建目录、批量改名、批量执行命令</li>
+<li><strong>做日志分析</strong>：grep&#x2F;awk 提取测试结果、统计错误</li>
+<li><strong>写部署&#x2F;备份脚本</strong>：配合 crontab 定时执行</li>
+<li><strong>看 Linux 教程</strong>：进阶可学 <code>expect</code>（交互式自动化）、<code>jq</code>（处理 JSON）</li>
+</ul>
+<blockquote>
+<p>本文持续更新中，欢迎在评论区交流。</p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>文章作者: </span><span class="post-copyright-info"><a target="_blank" rel="noopener" href="https://github.com/zhanyanmei">zhanyanmei</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>文章链接: </span><span class="post-copyright-info"><a href="https://zhanyanmei.github.io/39af0d1b">https://zhanyanmei.github.io/39af0d1b</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank">CC BY 4.0</a> 许可协议。转载请注明来源 <a href="https://zhanyanmei.github.io" target="_blank">我的博客</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">学习笔记</a><a class="post-meta__tags" href="/tags/Shell/">Shell</a><a class="post-meta__tags" href="/tags/Linux/">Linux</a><a class="post-meta__tags" href="/tags/%E8%87%AA%E5%8A%A8%E5%8C%96%E8%84%9A%E6%9C%AC/">自动化脚本</a></div><div class="post-share"><div class="social-share" data-image="/images/avatar.png" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/4a17b156" title="Hello World"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">上一篇</div><div class="info-item-2">Hello World</div></div><div class="info-2"><div class="info-item-1">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post$ hexo new "My New Post"  More info: Writing Run server$ hexo server  More info: Server Generate static files$ hexo generate  More info: Generating Deploy to remote sites$ hexo deploy  More info: Deployment </div></div></div></a><a class="pagination-related" href="/dc3a542e" title="数据库高可用测试工具使用指南：tc / sysbench / nmon"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">下一篇</div><div class="info-item-2">数据库高可用测试工具使用指南：tc / sysbench / nmon</div></div><div class="info-2"><div class="info-item-1">在信创集中式数据库高可用测试中，三种工具各司其职：    工具 用途 在本次测试中的角色    tc Linux 流量控制 模拟同城双机房之间的 1.5ms 网络延迟   sysbench 数据库压测 预置数据 + 只读&#x2F;只写&#x2F;读写混合场景压测、长稳   nmon 系统资源监控 采集 CPU &#x2F; 内存 &#x2F; 磁盘 I&#x2F;O    一、tc —— 模拟同城网络延迟1.1 原理tc（Traffic Control）是 Linux 内核的流量控制工具，通过 qdisc（队列规则） 对网卡出方向流量做整形。其中 netem（Network Emulator）qdisc 专门用来模拟延迟、丢包、乱序、抖动等网络异常。  注意：netem 只对出方向生效。要模拟主备之间的双向延迟，通常需要在两个节点上分别对”发往对方”的流量加延迟。  1.2 基本用法# 查看网卡现有规则 tc qdisc show dev eth0  # 对 eth0 所有出方向流量加 1.5ms 延迟 tc qdisc add dev eth0 root netem dela...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>相关推荐</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/435f797f" title="Python 基础语法快速入门（小白总结）"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-08-19</div><div class="info-item-2">Python 基础语法快速入门（小白总结）</div></div><div class="info-2"><div class="info-item-1"> 文章目的：面向需要用 Python 搭建测试框架的小白，意在快速入门、实操自动化框架搭建。本文是第一篇——基础语法总结，看完即可读懂和编写测试脚本。  学习平台   平台 说明    Python123 中文交互式教程，适合入门边学边练   Python 官方中文教程 权威文档，适合系统查阅   菜鸟教程 语法速查手册，忘了翻一眼    一、变量与数据类型Python 是动态类型语言，变量无需声明类型，赋值即创建。 name = "张三"        # 字符串 str age = 25             # 整数 int height = 1.75        # 浮点数 float is_student = True    # 布尔 bool score = None         # 空值 NoneType（类似其他语言的 null）  常用类型转换： int("25")     # 25  字符串转整数 str(25)       # "25"  整数转字符串 float("1.5")  # 1.5 bool(0)       # False，0、空串、空列...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" data-lazy-src="/images/avatar.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">zhanyanmei</div><div class="author-info-description">记录学习，分享技术</div><div class="site-data"><a href="/archives/"><div class="headline">文章</div><div class="length-num">4</div></a><a href="/tags/"><div class="headline">标签</div><div class="length-num">13</div></a><a href="/categories/"><div class="headline">分类</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zhanyanmei"><i class="fab fa-github"></i><span>GitHub</span></a><div class="card-info-social-icons"><a class="social-icon" href="mailto:732454894@qq.com" target="_blank" title="邮箱"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://github.com/zhanyanmei" target="_blank" title="GitHub"><i class="fab fa-github"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>公告</span></div><div class="announcement_content">欢迎来到我的博客 👋<br>记录学习过程中的笔记与心得。</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%A6%E4%B9%A0%E5%B9%B3%E5%8F%B0"><span class="toc-number">1.</span> <span class="toc-text">学习平台</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81Shell-%E6%98%AF%E4%BB%80%E4%B9%88-%E7%AC%AC%E4%B8%80%E4%B8%AA%E8%84%9A%E6%9C%AC"><span class="toc-number">2.</span> <span class="toc-text">一、Shell 是什么 &amp; 第一个脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E5%8F%98%E9%87%8F"><span class="toc-number">3.</span> <span class="toc-text">二、变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%BC%95%E7%94%A8"><span class="toc-number">3.1.</span> <span class="toc-text">1. 定义与引用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%89%B9%E6%AE%8A%E5%8F%98%E9%87%8F%EF%BC%88%E8%84%9A%E6%9C%AC%E5%BF%85%E4%BC%9A%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">2. 特殊变量（脚本必会）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%91%BD%E4%BB%A4%E6%9B%BF%E6%8D%A2%E4%B8%8E%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">3.3.</span> <span class="toc-text">3. 命令替换与环境变量</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%93%8D%E4%BD%9C"><span class="toc-number">4.</span> <span class="toc-text">三、字符串操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%95%B0%E7%BB%84"><span class="toc-number">5.</span> <span class="toc-text">四、数组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94%E3%80%81%E6%9D%A1%E4%BB%B6%E5%88%A4%E6%96%AD"><span class="toc-number">6.</span> <span class="toc-text">五、条件判断</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-if-%E8%AF%AD%E5%8F%A5"><span class="toc-number">6.1.</span> <span class="toc-text">1. if 语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%88%A4%E6%96%AD%E6%9D%A1%E4%BB%B6%E9%80%9F%E6%9F%A5"><span class="toc-number">6.2.</span> <span class="toc-text">2. 判断条件速查</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%BF%9B%E9%98%B6%EF%BC%9A-%E4%B8%8E%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97"><span class="toc-number">6.3.</span> <span class="toc-text">3. 进阶：[[ ]] 与逻辑运算</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD%E3%80%81%E5%BE%AA%E7%8E%AF"><span class="toc-number">7.</span> <span class="toc-text">六、循环</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-for-%E5%BE%AA%E7%8E%AF"><span class="toc-number">7.1.</span> <span class="toc-text">1. for 循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-while-until-%E5%BE%AA%E7%8E%AF"><span class="toc-number">7.2.</span> <span class="toc-text">2. while &#x2F; until 循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-case-%E8%AF%AD%E5%8F%A5%EF%BC%88%E5%A4%9A%E5%88%86%E6%94%AF%EF%BC%8C%E6%AF%94%E4%B8%80%E5%A0%86-if-%E6%B8%85%E7%88%BD%EF%BC%89"><span class="toc-number">7.3.</span> <span class="toc-text">3. case 语句（多分支，比一堆 if 清爽）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6"><span class="toc-number">7.4.</span> <span class="toc-text">4. 循环控制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%83%E3%80%81%E5%87%BD%E6%95%B0"><span class="toc-number">8.</span> <span class="toc-text">七、函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AB%E3%80%81%E9%87%8D%E5%AE%9A%E5%90%91%E4%B8%8E%E7%AE%A1%E9%81%93"><span class="toc-number">9.</span> <span class="toc-text">八、重定向与管道</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B9%9D%E3%80%81%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4%E9%80%9F%E6%9F%A5"><span class="toc-number">10.</span> <span class="toc-text">九、常用命令速查</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%96%87%E4%BB%B6%E4%B8%8E%E7%9B%AE%E5%BD%95"><span class="toc-number">10.1.</span> <span class="toc-text">1. 文件与目录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%96%87%E6%9C%AC%E4%B8%89%E5%89%91%E5%AE%A2%EF%BC%9Agrep-sed-awk"><span class="toc-number">10.2.</span> <span class="toc-text">2. 文本三剑客：grep &#x2F; sed &#x2F; awk</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E8%BF%9B%E7%A8%8B%E4%B8%8E%E8%B5%84%E6%BA%90"><span class="toc-number">10.3.</span> <span class="toc-text">3. 进程与资源</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%9D%83%E9%99%90%E3%80%81%E7%BD%91%E7%BB%9C%E3%80%81%E5%8E%8B%E7%BC%A9"><span class="toc-number">10.4.</span> <span class="toc-text">4. 权限、网络、压缩</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E3%80%81%E6%96%B0%E6%89%8B%E6%98%93%E9%94%99%E7%82%B9"><span class="toc-number">11.</span> <span class="toc-text">十、新手易错点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%81%E4%B8%80%E3%80%81%E5%AE%9E%E6%88%98%E8%84%9A%E6%9C%AC%EF%BC%88%E7%BB%93%E5%90%88%E6%95%B0%E6%8D%AE%E5%BA%93%E6%B5%8B%E8%AF%95%EF%BC%89"><span class="toc-number">12.</span> <span class="toc-text">十一、实战脚本（结合数据库测试）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%89%B9%E9%87%8F%E6%A3%80%E6%9F%A5%E9%9B%86%E7%BE%A4%E8%8A%82%E7%82%B9%E8%BF%9E%E9%80%9A%E6%80%A7"><span class="toc-number">12.1.</span> <span class="toc-text">1. 批量检查集群节点连通性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%95%B0%E6%8D%AE%E5%BA%93%E5%AE%9A%E6%97%B6%E5%A4%87%E4%BB%BD%E8%84%9A%E6%9C%AC"><span class="toc-number">12.2.</span> <span class="toc-text">2. 数据库定时备份脚本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%97%A5%E5%BF%97%E9%94%99%E8%AF%AF%E5%88%86%E6%9E%90"><span class="toc-number">12.3.</span> <span class="toc-text">3. 日志错误分析</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%8B%E4%B8%80%E6%AD%A5"><span class="toc-number">13.</span> <span class="toc-text">下一步</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/4a17b156" title="Hello World">Hello World</a><time datetime="2026-10-30T02:06:51.289Z" title="发表于 2026-10-30 10:06:51">2026-10-30</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/39af0d1b" title="Shell 脚本快速入门（小白总结）">Shell 脚本快速入门（小白总结）</a><time datetime="2026-10-20T02:30:00.000Z" title="发表于 2026-10-20 10:30:00">2026-10-20</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/dc3a542e" title="数据库高可用测试工具使用指南：tc / sysbench / nmon">数据库高可用测试工具使用指南：tc / sysbench / nmon</a><time datetime="2026-09-04T01:30:00.000Z" title="发表于 2026-09-04 09:30:00">2026-09-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/435f797f" title="Python 基础语法快速入门（小白总结）">Python 基础语法快速入门（小白总结）</a><time datetime="2026-08-19T12:20:11.000Z" title="发表于 2026-08-19 20:20:11">2026-08-19</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2026 By zhanyanmei</span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="日间和夜间模式切换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.6.1"></script><script src="/js/main.js?v=5.6.1"></script><script src="https://cdn.jsdelivr.net/npm/vanilla-lazyload@19.1.3/dist/lazyload.iife.min.js"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
